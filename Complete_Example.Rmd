@@ -7,21 +7,361 @@ output:
     toc: true
 ---
 
+```{r global_options, include=FALSE}
+## This will set global options for all chunks. They can be overwritten at each chunk as desired.  This saves time if you never want to display code (e.g., echo=FALSE as default)
+#knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',echo=FALSE, warning=FALSE, message=FALSE)
+```
+
 # Introduction to Markdown
 
+Formatting documents in markdown requires knowledge of a few syntactic symbols.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## New Paragraphs
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+To get spacing between paragraphs, you need to have two spaces at the end of a line.
 
-```{r}
-summary(cars)
+_Single or no space at end of the line:_
+
+Paragraph 1 
+Paragraph 2
+
+_Double space at the end of the line:_
+
+Paragraph 1  
+Paragraph 2
+
+## Text Formatting
+
+### Italics
+
+You can get italics using either a single asterisk or underscore
+
+```{italics}
+*asterisk* or _underscore_
+```
+*asterisk* or _underscore_
+
+### Bold
+
+You can get bold text using either a double asterisk or double underscore
+
+```{bold}
+**double asterisk** or __double underscore__
+```
+**double asterisk** or __double underscore__
+
+### Superscript and Subscript
+
+Use carets to get superscripts and tildes for subscripts.
+
+```{super_subscript}
+x^superscript^ and x~subscript~
+```
+x^superscript^ and x~subscript~
+
+### Strikethrough
+
+Use a double tilde for strikethrough formatting
+
+```{strikethrough}
+~~scratch that~~
+```
+~~scratch that~~
+
+## Other Text Types
+
+### Weblinks
+
+Include the text you want displayed in brackets, with the weblink in parentheses.
+
+```{weblinks}
+[This is a link to tonight's presentation.](https://github.com/laurakwiley/KnitrandRMarkdown_NashvilleRUsers)
+```
+[This is a link to tonight's presentation.](https://github.com/laurakwiley/KnitrandRMarkdown_NashvilleRUsers)
+
+
+### Equations
+
+You can use standard LaTeX equations in markdown with the dollarsign syntax.
+
+```{equations}
+$A = \pi*r^{2}$
+```
+$A = \pi*r^{2}$
+
+### Lists
+
+#### Unordered
+
+Just use an asterisk at the front of the line followed by a space and then your text. To get the next level down the heirarchy use two tabs or four spaces in RStudio.  You can continue to use an asterisk or you can use a plus sign,
+```{bullets}
+* Highest Level
+    * Same symbol sub-level
+    + Changed symbol sub-level
+        * Sub-sub-level
+* Next Topic
 ```
 
-You can also embed plots, for example:
+* Highest Level
+    * Same symbol sub-level
+    + Changed symbol sub-level
+        * Sub-sub-level
+* Next Topic
 
-```{r, echo=FALSE}
-plot(cars)
+#### Numbered
+
+Use numbering like you normally would. Again put two tabs or four spaces to move down the heirarchy.
+
+```{numbered_list}
+1. First item
+    a. ordered sub-item
+2. Second item
+    * bulleted sub-item
+    + bulleted sub-item
+```
+1. First item
+    a. ordered sub-item
+2. Second item
+    * bulleted sub-item
+    + bulleted sub-item
+
+### Manually-Entered Tables
+
+Use verticle bars and dashes for your table separators. Can make it pretty, but you don't have to for it to format properly.
+
+```{tables}
+Column 1               | Column 2
+-----------------------|-----------
+cell 1                 | cell 2
+Lots of data in cell 3 | cell 4
+
+
+Column 1 | Column 2
+-|-
+cell 1 | cell 2
+Lots of data in cell 3 | cell 4
+```
+Column 1               | Column 2
+-----------------------|-----------
+cell 1                 | cell 2
+Lots of data in cell 3 | cell 4
+
+
+Column 1 | Column 2
+-|-
+cell 1 | cell 2
+Lots of data in cell 3 | cell 4
+
+
+
+# Integrating RMarkdown with R Code
+
+## Inline Code
+
+Let's say you have templated text that you want to import data into. For instance, if I was a botanist, I might want to have the following template for my employees/students to report out the data they collected that week.
+
+This week, I measured data on XX species of plants.  The average sepal length and width were YY and ZZ respectively with standard deviations of AA and BB.  The average petal lengths and widths (standard deviation) were CC (DD) and EE (FF) respectively.
+
+Using the iris data set, I can automatically run R code inline using backticks ` `.
+
+This week, I measured data on `r length(unique(iris$Species))` species of plants.  The average sepal length and width were `r mean(iris$Sepal.Length)` and `r mean(iris$Sepal.Width)` respectively with standard deviations of `r sd(iris$Sepal.Length)` and `r sd(iris$Sepal.Width)`.  The average petal lengths and widths (standard deviation) were `r mean(iris$Petal.Length)` (`r sd(iris$Petal.Length)`) and `r mean(iris$Petal.Width)` (`r sd(iris$Petal.Width)`) respectively.
+
+
+## Code Chunks
+
+This is the most common way of integrating R code in RMarkdown documents.  You use three backticks to set off each chunk, then curly braces to explain the language used (for syntax highlighting), a chunk name, and any options.
+
+```{r example_code_chunk_default_options}
+head(iris)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+By default, these code chunks display the R code run, as well as any console output.  There are a number of options you can use to change these default parameters.
+
+### Options
+
+#### echo
+
+When you are sending analyses to coworkers/analysts, you probably want to include the code used to generate your findings. However if you're sending it the C-Suite, you probably want to just show the output. echo=False, suppresses the R code from display.
+
+```{r example_echo, echo=FALSE}
+head(iris)
+```
+
+#### warning
+
+Invariably when I load packages I get a warning from library("dplyr") about masking other functions.  I really don't need to see these in my report, so I can use warning=FALSE.
+
+```{r example_w_warning}
+library("plyr")
+library("dplyr")
+```
+
+```{r example_wo_warning, warning=FALSE}
+library("plyr")
+library("dplyr")
+```
+
+#### error
+
+The error option tells you wether R should quit if it finds an error or keep going. 
+
+error=FALSE - R script stops and you cannot knit until the error is fixed.  
+error=TRUE - keeps running the R script but outputs an error message.
+
+```{r example_error, error=TRUE}
+my_nonfunction(testing)
+```
+
+#### results
+
+You can also change the format of the results that you produce. There are four options: markup, asis, hold, or hide.
+
+##### results="markup"
+
+```{r results_markup, results='markup'}
+head(iris)
+```
+
+##### results='asis'
+
+Results='asis' returns just the raw text output to the console, without any formatting.  In the case of head(iris) this is undesirable as the output is really messy.  
+
+```{r results_asis, results='asis'}
+head(iris)
+```
+
+However, if you have a function that outputs markdown, then you want to leave the results "asis" so that they can be processed with the rest of your markdown document. A great example of a cleaner way to show data from a dataframe is to use the Knitr function kable().  For this function to work, you have to return results "asis".
+
+```{r results_asis_kable, results='asis'}
+library("knitr")
+kable(head(iris))
+```
+
+
+##### results="hold"
+
+If you have multiple returns of data inside a single code chunk, Knitr will display each piece of code and its results as there are data to return.  If you would prefer instead to have all output from a chunk in a single output section, use results="hold".
+
+Without Hold:
+```{r results_no_hold}
+cat('Inside a chunk\n\n')
+
+for (i in 1:3) {
+    cat('* Inside loop #', i, '\n')
+}
+
+cat('Outside a loop, but still inside the chunk')
+```
+
+With Hold:
+```{r results_hold, results='hold'}
+cat('Inside a chunk\n\n')
+
+for (i in 1:3) {
+    cat('* Inside loop #', i, '\n')
+}
+
+cat('Outside a loop, but still inside the chunk')
+```
+
+##### results="hide"
+
+For some chunks you do not want to show any results. For this use results="hide".
+```{r results_hide, results='hide'}
+head(iris)
+```
+
+#### comment
+
+If you've noticed, when we have raw output from R, it is always preceeded by two pound signs.  This can be controlled with the comment option. I prefer just to have this turned off - e.g., no comment characters.
+
+```{r comment_example, comment=""}
+head(iris)
+```
+
+#### eval
+
+Sometimes you want to document the code you used for a particular step, but you don't want it to execute while rendering the report. Use eval=FALSE to have R skip this code chunk.
+
+```{r example_eval, eval=FALSE}
+replicate(100000, rnorm(100000))
+```
+
+#### cache
+
+An alternative to eval=FALSE, is to only run a chunk of code once and cache the results.  This stores all data objects and figures created in that code chunk in a directory and simply pulls in that data for future code chunks.  A word of caution, this works well if the computational analysis time is the slow step.  If you are dealing with large datasets this may not be any faster because of the long read times to import the data.
+
+
+```{r cache_example, cache=TRUE}
+library("ggplot2")
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+```
+
+## Figures
+
+You can include figures in your RMarkdown document.  There are a number of options to precisely control how these figures appear.
+
+### Options
+
+#### fig.path
+
+This allows you to select a particular file name and location for a figure created in the graph. A word of caution, it concatenates with the chunk name!
+
+```{r fig_path, fig.path="Complete_Example_files/figure-html/path_example_"}
+library("ggplot2")
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,shape=Species))+geom_point()
+```
+
+#### fig.show
+
+Like results, this option configures how the plots are displayed.  This allows you to keep the content output of a chunk, but suppress or modify the figure.
+
+##### 'asis'
+
+```{r fig_asis, fig.show='asis'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,shape=Species))+geom_point()
+```
+
+##### 'hold'
+
+```{r fig_hold, fig.show='hold'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,shape=Species))+geom_point()
+```
+
+##### 'hide'
+
+```{r fig_hide, fig.show='hide'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,shape=Species))+geom_point()
+```
+
+#### fig.align
+
+This allows you to move the figures around as desired.
+
+```{r fig_left, fig.align='left'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+```
+
+```{r fig_center, fig.align='center'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+```
+
+```{r fig_right, fig.align='right'}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width,color=Species))+geom_point()
+```
+
+#### fig.width and fig.height
+
+These allow you to change the size/dimensions of your figure. The default is 7" for both measurements.
+
+```{r fig_default_size}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width))+geom_point()+facet_grid(.~Species)
+```
+
+```{r fig_size,fig.height=7,fig.width=21}
+ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width))+geom_point()+facet_grid(.~Species)
+```
+
