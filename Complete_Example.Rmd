@@ -365,3 +365,11 @@ ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width))+geom_point()+facet_grid(.~Specie
 ggplot(iris, aes(x=Sepal.Length,y=Sepal.Width))+geom_point()+facet_grid(.~Species)
 ```
 
+
+# One last trick
+
+Want to see all of the R code from a markdown document? Use the purl() command from knitr.
+
+```{r purl, eval=FALSE}
+purl("Complete_Example.Rmd")
+```
